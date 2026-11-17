@@ -24,8 +24,14 @@ class Registry:
             reason=self.reason(dependency)
             if reason: return reason
         return ''
-    def extensions(self):
-        return tuple(sorted({ext for d in self.entries.values() if d.contract_id=='visual.asset-loader' and not self.reason(d.module_id) for ext in d.accepts}))
+    def extensions(self, capability=None):
+        return tuple(sorted({
+            extension for descriptor in self.entries.values()
+            if descriptor.contract_id=='visual.asset-loader'
+            and (capability is None or capability in descriptor.provides)
+            and not self.reason(descriptor.module_id)
+            for extension in descriptor.accepts
+        }))
     def operation(self,contract,key):
         matches=[d for d in self.entries.values() if d.contract_id==contract and key in d.accepts and not self.reason(d.module_id)]
         if not matches: raise AssetFailure('unavailable','CLAP-RENDER-006','Нет обработчика операции '+key)

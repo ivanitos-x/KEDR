@@ -206,4 +206,4 @@ class KvxLoader:
         scene = read_kvx(path, context)
         return Asset(scene, frozenset({'view.move', 'view.zoom', 'view.rotate',
                                        'view.materials', 'view.palette'}),
-                     scene.info, preferred_mode='solid')
+                     scene.info, preferred_mode='materials')

@@ -5,7 +5,7 @@ import sys
 from .visual.bootstrap import build_registry
 def applications(registry=None):
     registry=registry or build_registry()
-    return {'CLAP.PNG':('png',list(registry.extensions()))}
+    return {'CLAP.PNG':('png',list(registry.extensions('scene.decode')))}
 APPS = applications()  # compatibility export for existing callers
 
 def register(remove=False, prefer=False):
@@ -15,6 +15,11 @@ def register(remove=False, prefer=False):
     if not python.exists(): raise RuntimeError('Сначала выполните setup.ps1')
     def put(path,name,value):
         with winreg.CreateKey(winreg.HKEY_CURRENT_USER,path) as key: winreg.SetValueEx(key,name,0,winreg.REG_SZ,value)
+    def unput(path,name):
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER,path,0,winreg.KEY_SET_VALUE) as key:
+                winreg.DeleteValue(key,name)
+        except FileNotFoundError: pass
     def delete(path):
         try:
             with winreg.OpenKey(winreg.HKEY_CURRENT_USER,path) as key:
@@ -48,6 +53,12 @@ def register(remove=False, prefer=False):
                         if winreg.QueryValueEx(key,'')[0] == prog: winreg.DeleteValue(key,'')
                 except FileNotFoundError: pass
         capabilities='Software\\CLAP\\'+prog+'\\Capabilities'
+        if module=='png':
+            for ext in ('.png','.art'):
+                unput('Software\\Classes\\'+ext+'\\OpenWithProgids',prog)
+                unput(capabilities+'\\FileAssociations',ext)
+                unput(appkey+'\\SupportedTypes',ext)
+                unput(legacy_appkey+'\\SupportedTypes',ext)
         if remove:
             delete('Software\\CLAP\\'+prog)
             try:

@@ -55,7 +55,7 @@ class KvxTests(unittest.TestCase):
         self.assertEqual(len(scene.vertices), 12 * 3 * 6 * 4)
         self.assertEqual(len(scene.coordinates), 12 * 3 * 3 * 4)
         asset = KvxLoader().load(self.path, LoadContext())
-        self.assertEqual(asset.preferred_mode, 'solid')
+        self.assertEqual(asset.preferred_mode, 'materials')
         self.assertIn('view.materials', asset.capabilities)
         self.assertIn('view.palette', asset.capabilities)
 

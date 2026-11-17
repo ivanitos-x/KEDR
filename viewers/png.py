@@ -398,6 +398,7 @@ def main():
     class Arguments(argparse.ArgumentParser):
         def error(self,message): raise ValueError('Некорректные аргументы: '+message)
     parser=Arguments(prog='KEDR')
+    parser.add_argument('--wait',action='store_true',help=argparse.SUPPRESS)
     parser.add_argument('--mode',choices=choices)
     parser.add_argument('--palette',help='Палитра Build для ART или KVX')
     parser.add_argument('--grp',type=Path,help='Архив Build GRP')

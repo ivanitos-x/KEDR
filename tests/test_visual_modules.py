@@ -113,7 +113,8 @@ class RegistryTests(unittest.TestCase):
             asset=OpenAsset(r)(path)
             with patch('viewers.visual.bootstrap.build_registry',return_value=r):
                 self.assertIn('*.fake',file_filter())
-            self.assertIn('.fake',applications(r)['CLAP.PNG'][1])
+            self.assertNotIn('.fake',applications(r)['CLAP.PNG'][1])
+            self.assertEqual(set(applications(r)['CLAP.PNG'][1]), {'.blend','.glb','.kvx','.md2','.md3'})
             win=PngWindow(path,asset); self.assertFalse(win.is_model); self.assertEqual(win.image.width(),2); win.close()
     def test_signature_mismatch_does_not_fallback(self):
         r=Registry(); r.register(descriptor())
