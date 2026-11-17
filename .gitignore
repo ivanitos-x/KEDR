@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.test-tmp/
+
+/*.exe
+/tile-*.png
